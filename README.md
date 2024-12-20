@@ -1,6 +1,8 @@
 
 # Voice Cloning Knowledge Distillation
 
+This repository is a work in progress, the models are big in size so difficulty in uploading, all samples are yet to be added.
+
 This repository contains a research project focusing on **voice cloning** using **knowledge distillation techniques**. The main goal is to distill knowledge from a large teacher model (a high-quality, resource-intensive voice cloning system) into a smaller, more efficient student model without significantly compromising audio quality and speaker similarity.
 
 By using knowledge distillation, we aim to reduce the computational footprint, memory usage, and inference latency of state-of-the-art voice cloning models, making them more accessible and deployable on edge devices or less powerful hardware setups.
