@@ -1,108 +1,100 @@
+# Dynamic Fine-Tuning and Adaptive Reference Selection for StyleTTS2 in Speaker-Specific Voice Synthesis Using YouTube Data
 
-# Voice Cloning Knowledge Distillation
+This repository accompanies the paper:  
+**"Dynamic Fine-Tuning and Adaptive Reference Selection for StyleTTS2 in Speaker-Specific Voice Synthesis Using YouTube Data"**  
+*Mohammad Zubair Khan, Katz School of Science and Health, Yeshiva University, New York, NY, USA*
 
-This repository is a work in progress, the models are big in size so difficulty in uploading, all samples are yet to be added.
+**Paper Link:** [https://github.com/CasterShade/Voice-cloning-TTS](https://github.com/CasterShade/Voice-cloning-TTS)
 
-This repository contains a research project focusing on **voice cloning** using **knowledge distillation techniques**. The main goal is to distill knowledge from a large teacher model (a high-quality, resource-intensive voice cloning system) into a smaller, more efficient student model without significantly compromising audio quality and speaker similarity.
+## Overview
 
-By using knowledge distillation, we aim to reduce the computational footprint, memory usage, and inference latency of state-of-the-art voice cloning models, making them more accessible and deployable on edge devices or less powerful hardware setups.
+This project presents a fully automated, data-to-training pipeline and a dynamic fine-tuning methodology for synthesizing high-fidelity, speaker-specific voices using the StyleTTS2 model. Leveraging heterogeneous audio sources—YouTube videos, podcasts, and Zoom meeting recordings—the system automates every step, from raw audio collection and segmentation to text and phoneme transcription, creating speaker-tailored datasets for training.
 
-## Key Features
+After fine-tuning StyleTTS2 to replicate specific speakers’ vocal styles, the project introduces a **dynamic reference selection** mechanism based on cosine similarity between input text and training transcripts. This ensures that the synthesized audio style adapts to the most contextually relevant reference speech. Additionally, a custom evaluation framework is proposed, comparing synthesized and reference audio at the word level for more accurate fidelity and intelligibility assessments.
 
-- **Knowledge Distillation Pipeline:**  
-  Leverages a high-fidelity teacher TTS (Text-to-Speech) model to train a smaller student model. The student model learns to replicate the teacher’s acoustic output and voice characteristics.
-  
-- **Multi-Speaker Voice Cloning:**  
-  Works with multiple target speakers, allowing the student model to generalize and clone various voices.
-  
-- **Lightweight & Efficient:**  
-  Optimized for lower computational cost while preserving voice quality and naturalness.
+The work also explores knowledge distillation by creating a smaller “student” model with half the number of hidden layers. While this did not yield performance improvements, it highlights future directions for model compression in high-fidelity TTS systems.
 
-- **Famous Speaker Samples:**  
-  Includes demonstration samples for notable voices such as:
-  - Donald Trump
-  - Elon Musk
-  - Jensen Huang
-  - Barack Obama
+## Key Contributions
 
-  These samples showcase the model’s ability to capture distinctive speaking styles, intonations, and vocal timbre.
+1. **Automated Multi-Source Data Pipeline:**  
+   - **Data Scraping & Processing:** Collects speech data from YouTube, podcasts, and Zoom meetings.  
+   - **Speaker Diarization & Segmentation:** Isolates the target speaker’s audio, splits it into sentence-level chunks.  
+   - **Transcription & Phoneme Conversion:** Dynamically generates transcripts and phoneme alignments without manual intervention.
 
-## Getting Started
+2. **Dynamic Fine-Tuning with StyleTTS2:**  
+   - Adapts StyleTTS2 for speaker-specific characteristics.
+   - Achieves high-fidelity synthesis even from limited, noisy data sources.
 
-### Prerequisites
+3. **Adaptive Reference Selection via Cosine Similarity:**  
+   - Chooses contextually relevant reference samples by comparing input text embeddings with training transcripts.
+   - Enhances style fidelity, ensuring the synthesized speech closely matches the speaker’s authentic tone and mannerisms.
 
-- **Python 3.7+**
-- **PyTorch 1.10+** (GPU recommended for training)
-- **Audio Processing Libraries:**  
-  Such as `librosa`, `soundfile`
-- **Model Dependencies:**  
-  Requirements might differ based on the teacher and student architectures chosen. Install dependencies via:
-  ```bash
-  pip install -r requirements.txt
-  ```
+4. **Custom Word-Level Evaluation Metrics:**  
+   - Incorporates WhisperX-based word-level segmentation and phoneme alignment.
+   - Evaluates synthesized vs. ground truth audio at word granularity, yielding deeper insights than standard utterance-level metrics.
+   - Measures naturalness, intelligibility, and speaker identity retention using PESQ, STOI, CBAK, CSIG, COVL, and composite quality metrics.
 
-### Project Structure
+5. **Student Model Exploration (Knowledge Distillation):**  
+   - Attempts to compress StyleTTS2 into a student model with half as many hidden layers.
+   - Although this did not improve performance, it provides groundwork for future efficiency-focused research.
 
-```
-.
-├─ data/
-│  ├─ teacher_audio/          # Original high-quality samples (for reference)
-│  ├─ student_output/         # Output from the student model during training
-│  └─ text_prompts.txt        # Sample texts used to generate audio
-│
-├─ models/
-│  ├─ teacher_model/          # Pre-trained teacher model weights
-│  ├─ student_model/          # Distilled student model weights (to be generated)
-│
-├─ scripts/
-│  ├─ Voice_Clonning.ipynb   # Script for running the vice cloning pipeline and training, Script to run inference with the model, Tools to evaluate speaker similarity, quality, etc.
-│  ├─ synthesize.py           # Script to run inference with the model, Tools to evaluate speaker similarity, quality, etc.
-│  └─ styletts2_inference.py  # Script to run inference with the model
-│
-└─ samples/
-   ├─ trump_samples/
-   ├─ elon_musk_sample.wav
-   ├─ jensen_huang_sample.wav
-   ├─ obama_sample.wav
-   └─ README.md (short description of each sample)
-```
+## Data Sources & Preprocessing
 
-## Generated Audio Samples
+- **YouTube:** Top search results for target speakers like Elon Musk or Donald Trump are downloaded and processed.
+- **Podcasts & Zoom Recordings:** Additional audio sources enrich the dataset’s diversity.
+- **Preprocessing Steps:**
+  - Speaker diarization using `pyannote.audio` to isolate target voices.
+  - Noise reduction, volume normalization, and segment trimming.
+  - Automatic transcription and phoneme extraction for training readiness.
 
-In the [`samples/` directory](samples/), you will find example audio clips generated by the student model for well-known voices. These samples demonstrate how closely the student model can mimic the teacher’s output and speaker characteristics after distillation:
+## Model & Training
 
-- [Trump Sample](samples/trump_samples/)
-- [Elon Musk Sample](samples/elon_musk_sample.wav)
-- [Jensen Huang Sample](samples/jensen_huang_sample.wav)
-- [Obama Sample](samples/obama_sample.wav)
+- **Model:** StyleTTS2, an expressive neural TTS model with style diffusion.
+- **Fine-Tuning Setup:**
+  - Limited data environments handled gracefully.
+  - A batch size of 2 and a learning rate of 1e-4 for stable adaptation.
+  - 50 epochs of training with custom loss terms emphasizing speaker consistency.
 
-Listen to these samples to get a sense of the quality and capabilities of the distilled model.
+- **Reference Selection:**
+  - TF-IDF vectorization of training transcripts.
+  - Cosine similarity to select a contextually relevant reference sample for each new input.
+  - Maintains style consistency and improves perceived naturalness.
 
-## Limitations & Ethical Considerations
+## Evaluation
 
-- **Voice Cloning Misuse:**  
-  The ability to clone voices raises ethical and privacy concerns. Use responsibly, only for legally and ethically permissible scenarios.
-  
-- **Impersonation Risks:**  
-  Generated voices can be misused for impersonation or misinformation. Consider watermarking or implementing authentication measures if deploying publicly.
+- **Word-Level Comparison:**
+  - Uses WhisperX to align synthesized and ground truth audio at the word level.
+  - Compares corresponding words to assess phoneme accuracy, timing, and pitch stability.
 
-- **Data & Licensing:**  
-  Ensure that you have proper rights and licenses for any training data used, especially if dealing with proprietary speech datasets.
+- **Speech Quality Metrics:**
+  - **PESQ & STOI:** Evaluate perceived quality and intelligibility.
+  - **CSIG, CBAK, COVL:** Composite measures for signal fidelity, background distortion, and overall quality.
+  - **Phoneme Accuracy:** Ensures precision in speaker’s articulation.
+  - Results show high speaker identity retention and naturalness, with many listeners unable to distinguish synthesized voices from real speech.
 
-## Contributing
+## Results & Findings
 
-Contributions are welcome! Feel free to:
+- Achieves realistic voice cloning for various speakers, including high-profile figures.
+- Dynamic reference selection significantly enhances voice style consistency.
+- Custom word-level metrics offer a fine-grained, more accurate assessment of model performance than aggregate-level metrics.
+- Student model compression attempts indicate that more sophisticated methods are needed for effective model size reductions.
 
-- Open issues for bugs, questions, or requests.
-- Submit pull requests with improvements, new features, or documentation enhancements.
+## Limitations & Future Work
+
+- **Data Dependence:** Quality is influenced by source recordings (YouTube/Zoom may have noise or variable quality).
+- **Computational Costs:** Dynamic reference selection and fine-tuning are resource-intensive.
+- **Future Directions:**
+  - More efficient model compression techniques.
+  - Faster inference strategies for real-time TTS.
+  - More diverse datasets to improve generalization.
+
 
 ## Acknowledgements
 
-- Inspiration from research on TTS, knowledge distillation, and neural vocoding.
-- References to publicly available voice recordings and state-of-the-art speech synthesis models.
+- This work builds upon recent advancements in TTS, style transfer, and speaker verification research.
+- Special thanks to the authors and maintainers of open-source libraries like `pyannote.audio`, `yt-dlp`, `librosa`, `phonemizer`, `pysepm`, and `WhisperX`.
 
 ---
 
 **Disclaimer:**  
-This project is for research and educational purposes only. The maintainers are not responsible for any misuse of the generated voices.
-```
+This project is for research and educational purposes only. The maintainers are not responsible for any misuse of the synthesized voices or the underlying technology.
