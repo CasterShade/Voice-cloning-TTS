@@ -55,9 +55,9 @@ By using knowledge distillation, we aim to reduce the computational footprint, m
 │  ├─ student_model/          # Distilled student model weights (to be generated)
 │
 ├─ scripts/
-│  ├─ train_distillation.py   # Script for running the distillation training
-│  ├─ synthesize.py           # Script to run inference with the student model
-│  └─ evaluation_metrics.py   # Tools to evaluate speaker similarity, quality, etc.
+│  ├─ Voice_Clonning.ipynb   # Script for running the vice cloning pipeline and training, Script to run inference with the model, Tools to evaluate speaker similarity, quality, etc.
+│  ├─ synthesize.py           # Script to run inference with the model, Tools to evaluate speaker similarity, quality, etc.
+│  └─ styletts2_inference.py  # Script to run inference with the model
 │
 └─ samples/
    ├─ trump_samples/
