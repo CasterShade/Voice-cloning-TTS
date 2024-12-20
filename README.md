@@ -4,7 +4,7 @@ This repository accompanies the paper:
 **"Dynamic Fine-Tuning and Adaptive Reference Selection for StyleTTS2 in Speaker-Specific Voice Synthesis Using Multi-Source Audio Data"**  
 *Mohammad Zubair Khan, Katz School of Science and Health, Yeshiva University, New York, NY, USA*
 
-**Paper Link:** [https://github.com/CasterShade/Voice-cloning-TTS](https://github.com/CasterShade/Voice-cloning-TTS)
+**Paper Link:** [[https://github.com/CasterShade/Voice-cloning-TTS](https://github.com/CasterShade/Voice-cloning-TTS/blob/main/Speech_Synthesis_Final_report.pdf)]
 
 ## Overview
 
